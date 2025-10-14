@@ -23,29 +23,29 @@ export class ProcessingService {
       const fileType = this.getFileType(file);
 
       // Step 1: Get appropriate extractor using factory
-      // const extractor = this.extractorFactory.getExtractor(
-      //   fileType,
-      //   visionProvider
-      // );
+      const extractor = this.extractorFactory.getExtractor(
+        fileType,
+        visionProvider
+      );
 
-      // // Step 2: Extract content using the selected extractor
-      // switch (fileType) {
-      //   case FileType.IMAGE:
-      //     extractedText = await extractor.extractFromImage(file.path, file.mimetype);
-      //     break;
-      //   case FileType.PDF:
-      //     extractedText = await extractor.extractFromPdf(file.path, file.mimetype);
-      //     break;
-      //   case FileType.DOCX:
-      //     extractedText = await extractor.extractFromDocx(file.path);
-      //     break;
-      //   default:
-      //     throw new BadRequestException('Unsupported file type');
-      // }
+      // Step 2: Extract content using the selected extractor
+      switch (fileType) {
+        case FileType.IMAGE:
+          extractedText = await extractor.extractFromImage(file.path, file.mimetype);
+          break;
+        case FileType.PDF:
+          extractedText = await extractor.extractFromPdf(file.path, file.mimetype);
+          break;
+        case FileType.DOCX:
+          extractedText = await extractor.extractFromDocx(file.path);
+          break;
+        default:
+          throw new BadRequestException('Unsupported file type');
+      }
 
-      // if (!extractedText || extractedText.trim().length === 0) {
-      //   throw new BadRequestException('Could not extract text from the file');
-      // }
+      if (!extractedText || extractedText.trim().length === 0) {
+        throw new BadRequestException('Could not extract text from the file');
+      }
 
       // Step 2: Use AI to extract and structure timetable data
       const structuredData = await this.aiService.extractTimetableData(extractedText);
